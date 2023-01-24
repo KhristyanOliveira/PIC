@@ -134,7 +134,7 @@ void maquina_estados_desvio_obstaculos(float distancia_obstaculo)
       }
       else
       {
-        Serial.println("[MOVIMENTO] Sem obstaculos a frente");
+
 
         /* Se não há obstáculos, continua em frente */
         controla_motor((MOTOR_A), (ACAO_MOVIMENTO_HORARIO));
@@ -156,13 +156,13 @@ void maquina_estados_desvio_obstaculos(float distancia_obstaculo)
         {
           controla_motor((MOTOR_A), (ACAO_MOVIMENTO_ANTI_HORARIO));
           controla_motor((MOTOR_B), (ACAO_MOVIMENTO_HORARIO));
-          Serial.println("[MOVIMENTO] Girando no sentido anti-horario...");
+
         }
         else
         {
           controla_motor((MOTOR_A), (ACAO_MOVIMENTO_HORARIO));
           controla_motor((MOTOR_B), (ACAO_MOVIMENTO_ANTI_HORARIO));
-          Serial.println("[MOVIMENTO] Girando no sentido horario...");
+
         }
       }
 
@@ -172,8 +172,6 @@ void maquina_estados_desvio_obstaculos(float distancia_obstaculo)
 
 void setup()
   {
-    Serial.begin(9600);
-
 
    configura_gpios_controle_motor();
    controla_motor((MOTOR_A), (ACAO_FREIO));
@@ -192,10 +190,6 @@ void loop()
   duracao=pulseIn(echo,HIGH);      
   
    distancia_a_frente = duracao *0.017;
- 
-  Serial.print("* Distancia lida: ");
-  Serial.print(distancia_a_frente);
-  Serial.println("cm");
 
   /* Verifica se há obstáculo a frente */
   maquina_estados_desvio_obstaculos(distancia_a_frente);
