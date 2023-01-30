@@ -17,5 +17,6 @@ Materiais:
 20 - jumpers macho/macho
 1 - placa board de 170 furos
 
+Obs 1: caso seja necessário, adicione a biblioteca ultrassonic.h
+Obs 2: outro meio de implementação do sensor de obstáculos seria utilizando no lugar do sensor ultrassõnico o módulo infravermelho.
 
-Obs: outro meio de implementação do sensor de obstáculos seria utilizando no lugar do sensor ultrassõnico o módulo infravermelho.
