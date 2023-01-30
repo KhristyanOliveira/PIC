@@ -1,6 +1,6 @@
 #include <Ultrasonic.h>
 
-/* Definições dos GPIOs para leitura do sensor ultrasonico */
+/* Definições das portas para leitura do sensor ultrasonico */
 #define trigger     13
 #define echo       12
 
@@ -8,7 +8,7 @@
 #define DISTANCIA_MINIMA_CM                30.0 //cm
 #define TEMPO_ENTRE_LEITURAS_DE_DISTANCIA  250  //ms
 
-/* Definições para controle dos dois motores */
+/* Definições dos pinos para controle dos dois motores */
 #define IN_1      4
 #define IN_2      5
 #define IN_3      6
@@ -38,11 +38,11 @@ char ultimo_lado_que_girou = (SENTIDO_GIRO_ANTI_HORARIO);
 char estado_desvio_obstaculos = (ESTADO_AGUARDA_OBSTACULO);
 
 /* Protótipos */
-void configura_gpios_controle_motor(void);
+void configura_controle_motor(void);
 void controla_motor(char motor, char acao);
-void maquina_estados_desvio_obstaculos(float distancia_obstaculo);
+void desvio_obstaculos(float distancia_obstaculo);
 
-void configura_gpios_controle_motor(void)
+void configura_controle_motor(void)
 {
   pinMode(IN_1, OUTPUT);
   pinMode(IN_2, OUTPUT);
@@ -53,23 +53,23 @@ void configura_gpios_controle_motor(void)
   pinMode(trigger,OUTPUT);
 }
 
-
+// configura o funcionamento dos motores 
 void controla_motor(char motor, char acao)
 {
-  int gpio_1_motor = 0;
-  int gpio_2_motor = 0;
+  int 1_motor = 0;
+  int 2_motor = 0;
 
 
   switch (motor)
   {
     case (MOTOR_A):
-      gpio_1_motor = IN_1;
-      gpio_2_motor = IN_2;
+      1_motor = IN_1;
+      2_motor = IN_2;
       break;
 
     case (MOTOR_B):
-      gpio_1_motor = IN_3;
-      gpio_2_motor = IN_4;
+      1_motor = IN_3;
+      2_motor = IN_4;
       break;
 
     default:
@@ -81,23 +81,23 @@ void controla_motor(char motor, char acao)
   switch (acao)
   {
     case (ACAO_FREIO):
-      digitalWrite(gpio_1_motor, HIGH);
-      digitalWrite(gpio_2_motor, HIGH);
+      digitalWrite(1_motor, HIGH);
+      digitalWrite(2_motor, HIGH);
       break;
 
     case (ACAO_MOVIMENTO_ANTI_HORARIO):
-      digitalWrite(gpio_1_motor, LOW);
-      digitalWrite(gpio_2_motor, HIGH);
+      digitalWrite(1_motor, LOW);
+      digitalWrite(2_motor, HIGH);
       break;
 
     case (ACAO_MOVIMENTO_HORARIO):
-      digitalWrite(gpio_1_motor, HIGH);
-      digitalWrite(gpio_2_motor, LOW);
+      digitalWrite(1_motor, HIGH);
+      digitalWrite(2_motor, LOW);
       break;
 
     case (ACAO_PONTO_MORTO):
-      digitalWrite(gpio_1_motor, LOW);
-      digitalWrite(gpio_2_motor, LOW);
+      digitalWrite(1_motor, LOW);
+      digitalWrite(2_motor, LOW);
       break;
 
     default:
@@ -109,8 +109,8 @@ void controla_motor(char motor, char acao)
 
 
 
-
-void maquina_estados_desvio_obstaculos(float distancia_obstaculo)
+// implementação do sensor de obstáculos, ap
+void desvio_obstaculos(float distancia_obstaculo)
 {
   switch (estado_desvio_obstaculos)
   {
@@ -119,7 +119,6 @@ void maquina_estados_desvio_obstaculos(float distancia_obstaculo)
       {
         /* Obstáculo encontrado. O robô deve girar para
            desviar dele */
-        Serial.println("[MOVIMENTO] Obstaculo encontrado!");
 
         /* Alterna sentido de giro para se livrar de obstáculos
            (para otimizar o desvio de obstáculos) */
@@ -173,7 +172,7 @@ void maquina_estados_desvio_obstaculos(float distancia_obstaculo)
 void setup()
   {
 
-   configura_gpios_controle_motor();
+   configura_controle_motor();
    controla_motor((MOTOR_A), (ACAO_FREIO));
    controla_motor((MOTOR_B), (ACAO_FREIO));
   }
@@ -183,7 +182,7 @@ void loop()
 {
   float distancia_a_frente = 0.0;
   float duracao;
-
+// leitura do sensor ultrassonico
   digitalWrite(trigger,HIGH);  
   delayMicroseconds(10);      
   digitalWrite(trigger,LOW);
@@ -192,7 +191,7 @@ void loop()
    distancia_a_frente = duracao *0.017;
 
   /* Verifica se há obstáculo a frente */
-  maquina_estados_desvio_obstaculos(distancia_a_frente);
+  desvio_obstaculos(distancia_a_frente);
 
   delay(TEMPO_ENTRE_LEITURAS_DE_DISTANCIA);
 }
