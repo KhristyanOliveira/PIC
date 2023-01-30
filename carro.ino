@@ -5,8 +5,8 @@
 #define echo       12
 
 /* Definições de operação do sensor ultrasônico */
-#define DISTANCIA_MINIMA_CM                30.0 //cm
-#define TEMPO_ENTRE_LEITURAS_DE_DISTANCIA  250  //ms
+#define dist_minima                30.0 //cm
+#define tempo_de_leitura 250  //ms
 
 /* Definições dos pinos para controle dos dois motores */
 #define IN_1      4
@@ -106,16 +106,13 @@ void controla_motor(char motor, char acao)
   }
 }
 
-
-
-
-// implementação do sensor de obstáculos, ap
-void desvio_obstaculos(float distancia_obstaculo)
-{
+// implementação do sensor de obstáculos
+void desvio_obstaculos(float distancia_obstaculo){
+  
   switch (estado_desvio_obstaculos)
   {
     case (ESTADO_AGUARDA_OBSTACULO):
-      if (distancia_obstaculo <= DISTANCIA_MINIMA_CM)
+      if (distancia_obstaculo <= dist_minima)
       {
         /* Obstáculo encontrado. O robô deve girar para
            desviar dele */
@@ -133,8 +130,6 @@ void desvio_obstaculos(float distancia_obstaculo)
       }
       else
       {
-
-
         /* Se não há obstáculos, continua em frente */
         controla_motor((MOTOR_A), (ACAO_MOVIMENTO_HORARIO));
         controla_motor((MOTOR_B), (ACAO_MOVIMENTO_HORARIO));
@@ -143,7 +138,7 @@ void desvio_obstaculos(float distancia_obstaculo)
       break;
 
     case (ESTADO_GIRANDO):
-      if (distancia_obstaculo > DISTANCIA_MINIMA_CM)
+      if (distancia_obstaculo > dist_minima)
       {
         /* Não há mais obstáculo a frente do robô */
         estado_desvio_obstaculos = (ESTADO_AGUARDA_OBSTACULO);
@@ -193,5 +188,5 @@ void loop()
   /* Verifica se há obstáculo a frente */
   desvio_obstaculos(distancia_a_frente);
 
-  delay(TEMPO_ENTRE_LEITURAS_DE_DISTANCIA);
+  delay(tempo_de_leitura);
 }
